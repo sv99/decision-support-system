@@ -1,17 +1,19 @@
 from app import api, ns
-from flask_restplus import Resource
+from flask_restplus import Resource, fields
 
 
-get_parser = api.parser()
-get_parser.add_argument('problemDescription', type=str,
-                        help='Problem description in log or stdout format', location='form')
+input_fields = ns.model('ProblemDescription', {'problemDescription': fields.String})
+recommendation = ns.model('Recommendation', {'recommendation': fields.String})
+# get_parser.add_argument('problemDescription', type=str,
+#                         help='Problem description in log or stdout format', location='form')
 
 
 @ns.route('/GetRecommendation')
 class GetRecommendation(Resource):
-    @ns.expect(get_parser)
+    @ns.doc(body=input_fields)
+    @ns.response(200, 'Success', recommendation)
     def post(self):
-        return 'Hello world!'
+        return {'recommendation': 'Hello world!'}
 
 
 @ns.route('/ComplementKnowledgeBase')
